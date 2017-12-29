@@ -1,15 +1,12 @@
 package main
 
-import (
-	"net/http"
-
-	"github.com/labstack/echo"
-)
+import "log"
 
 func main() {
-	e := echo.New()
-	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
-	})
-	e.Logger.Fatal(e.Start(":9000"))
+	c := newConfig()
+	if err := c.load(); err != nil {
+		log.Fatalln("[ERROR] Failed to load config.", err)
+	}
+	l := newLogger(c)
+	l.Fatal(newAPI(c, l).run())
 }
