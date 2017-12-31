@@ -1,13 +1,14 @@
 package main
 
-import "github.com/labstack/gommon/log"
+import (
+	"github.com/labstack/echo"
+	"github.com/labstack/gommon/log"
+)
 
-func newLogger(config *config) *log.Logger {
+func newLogger(c *config) echo.Logger {
 	logger := log.New("api")
-	level := log.ERROR
-	if config.isEnv(dev) {
-		level = log.DEBUG
+	if c.envEq(dev) {
+		logger.SetLevel(log.DEBUG)
 	}
-	logger.SetLevel(level)
 	return logger
 }

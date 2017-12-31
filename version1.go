@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/labstack/echo"
 )
@@ -21,6 +22,22 @@ func (api *version1) attach() {
 	}
 }
 
+var (
+	apiVersion        = "abc123"
+	apiBuildTimestamp = "1900-01-01_00:00:00am"
+	apiUptimeStart    = time.Now()
+)
+
+type apiStatus struct {
+	UptimeSeconds  uint64 `json:"uptime_seconds"`
+	BuildTimestamp string `json:"build_timestamp"`
+	Version        string `json:"version"`
+}
+
 func (api *version1) getStatus(c echo.Context) error {
-	return c.String(http.StatusOK, "OK")
+	return c.JSON(http.StatusOK, &apiStatus{
+		UptimeSeconds:  uint64(time.Since(apiUptimeStart) / time.Second),
+		BuildTimestamp: apiBuildTimestamp,
+		Version:        apiVersion,
+	})
 }

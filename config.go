@@ -22,6 +22,6 @@ func (c *config) load() error {
 	return envconfig.Process("", c)
 }
 
-func (c *config) isEnv(name string) bool {
+func (c *config) envEq(name string) bool {
 	return c.Env == name
 }
