@@ -1,8 +1,6 @@
 package main
 
 import (
-	"net/http"
-
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"github.com/labstack/gommon/log"
@@ -10,8 +8,8 @@ import (
 
 type api struct {
 	config *config
-	engine *echo.Echo
 	logger *log.Logger
+	engine *echo.Echo
 }
 
 func newAPI(c *config, l *log.Logger) *api {
@@ -23,14 +21,24 @@ func newAPI(c *config, l *log.Logger) *api {
 }
 
 func (a *api) run() error {
-	a.engine.Use(middleware.Recover())
-	a.engine.Use(middleware.Logger())
-	a.engine.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
-	})
-	a.engine.Logger.SetLevel(log.DEBUG)
-	if a.config.isEnv(prod) {
-		return a.engine.StartAutoTLS(":9443")
+	newVersion1(a).attach()
+	newVersion2(a).attach()
+	return startAPIWith(a.config, a.engine)
+}
+
+type engineProvider interface {
+	Use(middleware ...echo.MiddlewareFunc)
+	StartAutoTLS(address string) error
+	StartTLS(address string, certFile, keyFile string) error
+}
+
+var startAPIWith = func(c *config, e engineProvider) error {
+	e.Use(middleware.Recover())
+	e.Use(middleware.Logger())
+
+	if c.isEnv(prod) {
+		return e.StartAutoTLS(c.Listen)
+	} else {
+		return e.StartTLS(c.Listen, c.TLSCert, c.TLSKey)
 	}
-	return a.engine.StartTLS(a.config.Listen, a.config.TLSCert, a.config.TLSKey)
 }
