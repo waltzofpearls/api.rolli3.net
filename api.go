@@ -9,6 +9,7 @@ type api struct {
 	config *config
 	logger echo.Logger
 	engine *echo.Echo
+	github *githubAPI
 }
 
 func newAPI(c *config, l echo.Logger) *api {
@@ -20,6 +21,7 @@ func newAPI(c *config, l echo.Logger) *api {
 		config: c,
 		logger: l,
 		engine: e,
+		github: newGithubAPI(c),
 	}
 }
 

@@ -19,6 +19,9 @@ func (api *version1) attach() {
 	v1 := api.engine.Group("/v1")
 	{
 		v1.GET("/status", api.getStatus)
+		v1.GET("/projects", api.getProjects)
+		v1.GET("/contributions", api.getContributions)
+		v1.GET("/activities", api.getActivities)
 	}
 }
 
@@ -40,4 +43,21 @@ func (api *version1) getStatus(c echo.Context) error {
 		BuildTimestamp: apiBuildTimestamp,
 		Version:        apiVersion,
 	})
+}
+
+func (api *version1) getProjects(c echo.Context) error {
+	repos, err := api.github.getRepos()
+	if err != nil {
+		return err
+	}
+	c.JSON(http.StatusOK, repos)
+	return nil
+}
+
+func (api *version1) getContributions(c echo.Context) error {
+	return nil
+}
+
+func (api *version1) getActivities(c echo.Context) error {
+	return nil
 }

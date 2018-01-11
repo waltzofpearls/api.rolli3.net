@@ -8,10 +8,12 @@ const (
 )
 
 type config struct {
-	Env     string `envconfig:"ENV" default:"dev"`
-	Listen  string `envconfig:"LISTEN" default:":9443"`
-	TLSKey  string `envconfig:"TLS_KEY" default:"assets/local.api.rolli3.net.key.pem"`
-	TLSCert string `envconfig:"TLS_CERT" default:"assets/local.api.rolli3.net.cert.pem"`
+	Env            string `envconfig:"ENV" default:"dev"`
+	Listen         string `envconfig:"LISTEN" default:":9443"`
+	TLSKey         string `envconfig:"TLS_KEY" default:"assets/local.api.rolli3.net.key.pem"`
+	TLSCert        string `envconfig:"TLS_CERT" default:"assets/local.api.rolli3.net.cert.pem"`
+	GithubUsername string `envconfig:"GITHUB_USERNAME"`
+	GithubToken    string `envconfig:"GITHUB_TOKEN"`
 }
 
 func newConfig() *config {
