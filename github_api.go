@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 	"time"
 
@@ -75,7 +74,6 @@ func (g *githubAPI) getRepos() (*[]githubRepo, error) {
 			*repo.FullName,
 			*repo.DefaultBranch,
 		)
-		log.Printf("%#v\n\n", repo)
 		gr = append(gr, githubRepo{
 			Name:        repo.Name,
 			Description: repo.Description,

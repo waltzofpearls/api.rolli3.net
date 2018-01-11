@@ -55,6 +55,11 @@ func (api *version1) getProjects(c echo.Context) error {
 }
 
 func (api *version1) getContributions(c echo.Context) error {
+	contribs, err := api.github.getContribs()
+	if err != nil {
+		return err
+	}
+	c.JSON(http.StatusOK, contribs)
 	return nil
 }
 
